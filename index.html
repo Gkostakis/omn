@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OMN</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,7 +15,7 @@
   --text-dim:   rgba(255,255,255,0.42);
   --text-body:  rgba(255,255,255,0.55);
   --hairline:   rgba(255,255,255,0.07);
-  --font:       "IBM Plex Sans", "IBM Plex Sans Placeholder", sans-serif;
+  --font:       "Satoshi", sans-serif;
 }
 
 html, body {
@@ -357,12 +355,6 @@ body.inverted img {
   color: var(--text-dim);
   letter-spacing: 0.03em;
 }
-.footer-status {
-  font-size: 11px;
-  font-weight: 300;
-  color: var(--text-dim);
-  transition: color 0.3s;
-}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 680px) {
@@ -408,7 +400,6 @@ body.inverted img {
   <!-- FOOTER -->
   <div class="footer">
     <span class="footer-text">© OMN 2026. AI Chat Agent · Beta v.0.02</span>
-    <span class="footer-status" id="status-text"></span>
   </div>
 
 </div>
@@ -432,7 +423,6 @@ let choicesLive = false;
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('msg-input');
 const sendBtnEl  = document.getElementById('send-btn');
-const statusEl   = document.getElementById('status-text');
 const loaderEl   = document.getElementById('loader');
 
 /* ══ VOICEFLOW API ══ */
@@ -481,8 +471,7 @@ async function processTraces(traces) {
       }
 
       case 'end':
-        statusEl.textContent = 'Session ended — click ↺ to restart';
-        setInput(false);
+                setInput(false);
         break;
 
       default: break;
@@ -598,16 +587,13 @@ async function sendMessage(text) {
   appendUserBubble(msg);
   setInput(false);
   isWaiting = true;
-  statusEl.textContent = 'Agent is thinking…';
 
   try {
     const traces = await vfInteract({ type: 'text', payload: msg });
     await processTraces(traces);
-    statusEl.textContent = 'AI Sustainability Agent · Beta';
   } catch(e) {
     appendBotBubble('Something went wrong. Please try again.');
-    statusEl.textContent = 'Connection issue';
-    console.error(e);
+      console.error(e);
   } finally {
     isWaiting = false;
     if (!choicesLive) setInput(true);
@@ -652,13 +638,11 @@ async function launchConversation() {
   try {
     const traces = await vfInteract({ type: 'launch' });
     await processTraces(traces);
-    statusEl.textContent = 'AI Sustainability Agent · Beta';
     setInput(true);
   } catch(e) {
     removeLoader();
     appendBotBubble('Unable to connect to the agent. Please refresh and try again.');
-    statusEl.textContent = 'Connection error';
-    console.error(e);
+      console.error(e);
   }
 }
 

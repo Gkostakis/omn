@@ -107,14 +107,17 @@ body.inverted img {
 .messages-wrap {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 8px 28px 16px;
   display: flex;
   flex-direction: column;
   gap: 0;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  overscroll-behavior-y: contain;
 }
 .messages-wrap::-webkit-scrollbar { display: none; }
+-webkit-overflow-scrolling: touch;
 
 /* ── LOADING STATE ── */
 .loading-state {
@@ -357,15 +360,114 @@ body.inverted img {
 }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 680px) {
 
-  .topbar { padding: 16px 20px; }
+/* ── Tablet (portrait & landscape up to 1024px) ── */
+@media (max-width: 1024px) {
+  .logo-text { font-size: 44px; }
+  .messages-wrap { padding: 8px 24px 16px; }
+  .input-area { padding: 0 24px 44px; }
+  .topbar { padding: 18px 24px; }
+  .footer { padding: 10px 24px 14px; }
+  .bot-text { font-size: 15px; max-width: 100%; }
+  .user-bubble { max-width: 72%; }
+  .choices-panel { gap: 8px; }
+  .choice-btn { font-size: 13px; padding: 9px 18px; }
+}
+
+/* ── Mobile landscape / small tablet (max 768px) ── */
+@media (max-width: 768px) {
+  .logo-text { font-size: 36px; }
+  .topbar { padding: 14px 20px; }
   .messages-wrap { padding: 8px 20px 12px; }
-  .input-area { padding: 0 16px 20px; }
-  .footer { padding: 8px 20px 12px; }
-  .msg-outer { flex-direction: column; align-items: flex-start; }
-  .choices-panel { flex-direction: row; flex-wrap: wrap; align-self: flex-start; }
-  .user-bubble { max-width: 85%; }
+  .input-area { padding: 0 16px 32px; }
+  .footer { padding: 8px 20px 10px; }
+  .msg-outer { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .msg-outer.user { align-items: flex-end; }
+  .choices-panel { flex-direction: row; flex-wrap: wrap; align-self: flex-start; gap: 8px; }
+  .choice-btn { white-space: normal; text-align: left; font-size: 13px; padding: 9px 16px; }
+  .user-bubble { max-width: 82%; }
+  .bot-text { font-size: 14px; max-width: 100%; }
+  .bot-avatar { width: 34px; height: 34px; }
+}
+
+/* ── Mobile portrait: iPhone SE, 12, 13, 14, 15 (max 430px) ── */
+@media (max-width: 430px) {
+  .logo-text { font-size: 28px; }
+  .topbar { padding: 12px 16px; }
+
+  /* Messages: full bleed with comfortable side margins */
+  .messages-wrap { padding: 6px 16px 10px; }
+
+  /* Input sits above iOS home indicator with safe-area fallback */
+  .input-area {
+    padding: 0 14px 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  }
+
+  .footer { padding: 6px 16px 10px; }
+  .footer-text { font-size: 10px; }
+
+  /* Bot messages stack cleanly */
+  .msg-outer { gap: 10px; margin-bottom: 20px; }
+  .msg-bot-content { gap: 8px; }
+  .bot-avatar { width: 30px; height: 30px; }
+  .bot-text { font-size: 14px; line-height: 1.65; }
+
+  /* User bubble fills most of the width */
+  .user-bubble {
+    max-width: 88%;
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  /* Choice buttons go full width stacked */
+  .choices-panel { flex-direction: column; width: 100%; }
+  .choice-btn {
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+    font-size: 13px;
+    padding: 11px 16px;
+  }
+
+  /* Input pill */
+  .input-pill { padding: 9px 12px 9px 10px; gap: 10px; }
+  .input-orb { width: 28px; height: 28px; }
+  #msg-input { font-size: 16px; } /* 16px prevents iOS auto-zoom */
+  .send-btn { width: 32px; height: 32px; }
+
+  /* Invert toggle slightly smaller */
+  .invert-toggle { width: 42px; height: 24px; }
+  .invert-toggle::after { width: 18px; height: 18px; }
+  .invert-toggle.on::after { transform: translateX(18px); }
+}
+
+/* ── Very small phones (iPhone SE 1st gen, 320px) ── */
+@media (max-width: 360px) {
+  .logo-text { font-size: 24px; }
+  .topbar { padding: 10px 14px; }
+  .messages-wrap { padding: 4px 14px 8px; }
+  .input-area { padding: 0 12px 20px; }
+  .bot-text { font-size: 13px; }
+  .user-bubble { font-size: 13px; max-width: 92%; }
+}
+
+/* ── iOS safe area: notch / Dynamic Island / home bar ── */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .topbar {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+  .window {
+    /* expand to fill behind notch/home bar */
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* ── Fix 100vh on mobile Safari ── */
+@media (max-width: 768px) {
+  html { height: -webkit-fill-available; }
+  body { height: -webkit-fill-available; }
+  .window { height: -webkit-fill-available; min-height: 100vh; }
 }
 </style>
 </head>
